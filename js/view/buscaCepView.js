@@ -4,9 +4,6 @@ class BuscaCepView{
         this.$seletor.innerHTML = this.getTemplate();
         this._controller = controller;
 
-
-        // PRIVATE METHODS
-
         let setUpModel = (model) => {
             this.model = model;
             this.model.subscribe(this.updateView.bind(this));
@@ -16,17 +13,13 @@ class BuscaCepView{
             let formBusca = blg.$("#buscacep form");
             formBusca.addEventListener("submit", function(e){
                 e.preventDefault();
-    
-                // pedir pro controller fazer
+
                 this._controller.cep = formBusca.querySelector("#cep").value;
-                this._controller.getAddressAjax();
+                this._controller.getAddress();
             }.bind(this));
 
             // --- To DO Validar o cep.
         }
-
-        // CALL PRIVATE METHODS
-
         setUpModel(model);
         setUpEvents();
     }
