@@ -4,12 +4,15 @@ class BuscaCepController{
     }
 
     getAddress(){
-        this.getAddressPromises()
-            .then( address => {
+        this.getAddressAsync()
+            .then( address => {      
+                if (erro in address && address.erro === true) {
+                    throw new Error("Cep não encontrado");
+                }          
                 this._model.address = address;
             }).catch(err => {
                 console.log(err);
-            })
+            });       
     }
 
     getAddressAjax(){
@@ -28,7 +31,7 @@ class BuscaCepController{
     }
 
     getAddressPromises(){
-        let eddressPromise = new Promise((resolve, reject) => {
+        let addressPromise = new Promise((resolve, reject) => {
             let xhr = new XMLHttpRequest();
             xhr.open('GET', this._URL);
             xhr.send(null);
@@ -44,11 +47,22 @@ class BuscaCepController{
             
         });
 
-        return eddressPromise;
+        return addressPromise;
     }
 
-    getAddressFetch(){
-        
+    getAddressFetch(){           
+        return fetch(this._URL)
+            .then((response) => {
+                if (!response.ok) {                    
+                    throw new Error("Erro na requisição fetch");
+                }
+                return response.json();
+            })
+    }
+
+    async getAddressAsync(){
+        let promise = await fetch(this._URL).then(response => response.json());
+        return promise;
     }
 
     set cep(cep){
